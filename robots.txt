@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: http://doheejin.github.io/sitemap.xml
