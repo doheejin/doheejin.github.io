@@ -7,7 +7,7 @@ categories: linux
 tags:	linux envs slurm cluster
 ---
 
-이번 포스트에는 리눅스 환경에서 slurm 스케줄러를 활용하는 방법을 간단히 정리했다. gfh
+이번 포스트에는 리눅스 환경에서 slurm 스케줄러를 활용하는 방법을 간단히 정리했다.
 
 ## 작업 스크립트 작성
 클러스터에서 작업을 돌릴 때는 bash 스크립트(.sh 형태)를 만들어서 실행시키는게 편하다.
