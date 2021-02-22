@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "깃허브 블로그 구성(2) - vscode 로컬 작업 환경 갖추기"
+title:  "[github] 깃허브 블로그 구성(2) - vscode 로컬 작업 환경 갖추기"
 date:   2021-02-15T14:25:52-05:00
 author: Heejin Do
 categories: github

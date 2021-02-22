@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "깃허브 블로그 구성(3) - post 추가 및 업데이트 확인하기"
+title:  "[github] 깃허브 블로그 구성(3) - post 추가 및 업데이트 확인하기"
 date:   2021-02-15T14:25:52-05:00
 author: Heejin Do
 categories: github
