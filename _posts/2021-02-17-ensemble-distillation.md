@@ -1,10 +1,10 @@
 ---
 layout: post
-title:  "Ensemble Distillation for Neural Machine Translation"
+title:  "[NMT-KD] Ensemble Distillation for Neural Machine Translation"
 date:   2021-02-16T14:25:52-05:00
 author: Heejin Do
-categories: paper-review
-tags:	nmt knowledge distillation paper review ensemble knowledge-distillation
+categories: "paper_review"
+tags:	nmt knowledge distillation paper review ensemble knowledge-distillation KD
 ---
 > 논문 출처 (reference)
 : Freitag, M., Al-Onaizan, Y., & Sankaran, B. (2017). Ensemble distillation for neural machine translation. arXiv preprint arXiv:1702.01802.

@@ -14,7 +14,10 @@ Heejin Do (도희진)
 - docando71@gmail.com
 
 #### Research Topic
-Neural Machine Translation
+Natural Language Processing
+
+↪ Neural Machine Translation
+
 #### Education
 - Bachelor's degree in Computer Education & Data Science from Sungkyunkwan University
 - Exchange Student in Information Science and Technology(IST) at Pennsylvania State University
