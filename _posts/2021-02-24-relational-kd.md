@@ -11,7 +11,7 @@ tags:	vision CV knowledge distillation paper review relational knowledge-distill
 : Park, W., Kim, D., Lu, Y., & Cho, M. (2019). Relational knowledge distillation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp. 3967-3976).
 
 이 논문은 데이터들 간의 상호 **관계(mutual relations)**를 transfer 하는 **Relational** Knowledge Distillation을 제안하는 논문이다.
-vision 분야에 적용한 논문으로 
+vision 분야에 적용한 논문이라 자세한 실험 과정보다 방법론에 집중해서 정리해보았다.
 
 ## Abstract
 **Relational Knowledge Distillation(RKD)**은 teacher 모델의 데이터들 간 관계를 transfer 하는 distillation 기법으로, 기존의 KD 방법론들에서 student 모델이 teacher 모델의 output activation 자체를 모방했던 것과 구분된다. RKD의 적용을 위해 본 논문에서는 **<em>distance-wise</em>** 와 **<em>angle-wise losses</em>** 를 제안하며 이는 관계에서 구조적으로 다른점들을 penalize 한다. 여러 태스크에 적용한 실험 결과, 제안하는 방식은 student 모델의 성능을 향상시켰고, 특히 metric learning에서는 SOTA 성능을 달성하면서 동시에 teacher 모델의 성능을 뛰어넘었다. 
@@ -64,6 +64,15 @@ teacher와 student 각각에서 측정된 distance-wise 포텐셜을 사용한 l
 
 #### 2.2. Angle-wise distillation loss
 triplet 의 example들이 주어졌을 때, angle-wise relational 포텐셜은 output representation 공간 상에서 세 example 사이의 각도를 측정한다.
+
+<img src="/assets/images/kd_9.PNG" title="angle-wise RKD">
+
+위의 angle-wise 포텐셜을 이용해 angle-wise distillation loss는 아래처럼 정의된다.
+
+<img src="/assets/images/kd_10.PNG" title="angle-wise RKD">
+
+angle-wise distillation loss는 angular 차이를 penalize 함으로써 훈련 example들 간의 관계를 transfer 한다. 각도가 거리보다 higher-order 속성이기 때문에, 훈련과적에서 student에게 더 유연함을 제공하며 relational information을 더 효과적으로 전달할 것으로 예상된다. 
+
 ## Experiments
 
 ## Results
