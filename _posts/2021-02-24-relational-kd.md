@@ -30,28 +30,44 @@ vision 분야에 적용한 논문으로
 ## Backgrounds
 
 ### Conventioanl knowledge Distillation
-knowledge distillation은 student model의 예측을 teacher network의 예측에 맞추어 훈련하는 방법이다.
-이 논문에서는 전체 훈련 데이터를 teacher 네트워크로 번역한 결과(predictions)를 모았고, 
-이를 통해 student 네트워크가 teacher 모델을 흉내내는데 사용하기 위한 새로운 reference를 생산했다.
+보편화된 KD 방법들은 아래의 목적함수(objective function)를 최소화하는 것으로 설명될 수 있다.
+<img src="/assets/images/kd_1.PNG" title="generalization of conventional kd">
+여기서 l은 teacher와 student의 차이를 penalize 하는 손실함수이다.
+예를 들어, [Hinton et al.](https://arxiv.org/abs/1503.02531) 이 제안한 knowledge distillation에서는 student와 teacher의 pre-softmax outputs를 사용하며 softmax를 취하고 Kullback-Leibler divergence를 loss function으로 사용한다.
 
-본문에서 사용되는 **Forward translation**을 위한 두 가지 방법이 있는데,
-첫째는 student 모델을 original source로만 훈련하는 것이고,
-둘째는 original source에 더해, 번역 결과를 추가적인 훈련 데이터로 사용하는 것이다. 
+<img src="/assets/images/kd_2.PNG" title="Hinton et al's KD">
+
+또한, [Romero et al.]()에서는 f_T와 f_S를 각각 teacher와 student의 hidden layer output으로 두고 loss function을 Euclidean distance로 사용하였다. 이때, student의 hidden layer output 크기가 teacher 보다 더 작기 때문에 다른 차원을 이어주기 위한 linear mapping(β)이 도입되었다.
+<img src="/assets/images/kd_3.PNG" title="Romero et al's KD">
+이처럼, 대부분의 방법들을 (1)번 식으로 일반화시킬 수 있다. <em>본질적으로 보편적인 KD는 teacher모델의 individual output들을 student에게 전달하기에, 본 논문에서는 이러한 conventional KD를 **IKD**라고 부른다</em>.
+
 
 ## Methods
 
-### Relational Knowledge Distillation
+### Relational Knowledge Distillation(RKD)
+RKD는 teacher의 아웃풋 데이터들 간의 상호 관계를 이용해 **structural knowledge**를 전달하는 것에 목표를 둔다. IKD와 다르게, 모든 n-tuple 데이터들마다 **relational potential (ψ)**을 계산하고, 이 potential을 이용해 teacher에서 student모델로 정보를 전달한다.
+
+<img src="/assets/images/kd_4.PNG" title="RKD">
+여기서 (x1, x2, ..., xn)는 X_N으로부터 구성된 n-tuple들이고 ψ는 주어진 n-tuple들 간의 relational energy를 측정하는 relational potential 함수이다. l은 teacher와 student간의 차이를 penalize하는 손실함수이다. RKD는 포텐셜 함수를 이용해 student가 teacher와 동일한 relation 구조를 가지도록 학습시키기 때문에, high-order 속성들을 포함한 knowledge를 transfer 할 수 있다.
+
+어떤 potential 함수를 사용하느냐가 RKD에서 중요한 요소인데, 이 연구에서는 2가지의 간단하지만 효과적인 포텐셜 함수와 그에 상응하는 loss들을 제안한다. 첫째는 **pairwise** relation을 추출하는 **distance-wise** loss 이고, 둘째는 **ternary** relation을 추출하는 **angle-wise** loss이다.
 
 #### 2.1. Distance-wise distillation loss
+한 쌍(pair)의 훈련 examples가 주어졌을 때, distance-wise 포텐셜 함수(ψ_D)는 output representation 공간에서 두 example 간의 **유클리디언 거리**(Euclidean distance)를 측정한다. 
+<img src="/assets/images/kd_5.PNG" title="distance-wise RKD : ψ_D">
+이 식에서 µ는 미니배치 상에서 샘플링되는 모든 페어의 평균거리를 계산 한 값으로, 임베딩 스페이스 상의 포인트들 간 평균거리로 볼 수 있다. 즉 전체 식을 보면, **두 example 간의 상대적인 거리를 계산하기 위해** 임베딩 포인트들 간의 거리를 잰 후 그 값을 µ로 나눠주는 것이다.
+<img src="/assets/images/kd_6.PNG" title="distance-wise RKD : µ">
+teacher와 student 각각에서 측정된 distance-wise 포텐셜을 사용한 loss는 아래처럼 정의된다.
+<img src="/assets/images/kd_7.PNG" title="distance-wise RKD">
+궁극적으로 teacher와 student간의 structure 차이를 최소화 하는 것을 목표로 하기에, loss fucntion은 두 포텐셜 값 간의 차이를 줄이기 위해 **Hurber loss**를 사용한다.
+<img src="/assets/images/kd_8.PNG" title="distance-wise RKD">
 
 #### 2.2. Angle-wise distillation loss
-
+triplet 의 example들이 주어졌을 때, angle-wise relational 포텐셜은 output representation 공간 상에서 세 example 사이의 각도를 측정한다.
 ## Experiments
 
 ## Results
 
-
-<img src="/assets/images/ensemble_1.PNG" title="result1">
 
 
 ## Conclusion
