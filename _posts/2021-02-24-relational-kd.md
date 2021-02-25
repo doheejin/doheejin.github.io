@@ -73,14 +73,14 @@ triplet 의 example들이 주어졌을 때, angle-wise relational 포텐셜은 o
 
 angle-wise distillation loss는 angular 차이를 penalize 함으로써 훈련 example들 간의 관계를 transfer 한다. 각도가 거리보다 higher-order 속성이기 때문에, 훈련과적에서 student에게 더 유연함을 제공하며 relational information을 더 효과적으로 전달할 것으로 예상된다. 
 
+#### 2.3. Training with RKD
+훈련 과정에서 RKD loss는 그 자체로 loss function으로 쓰이거나, task-specific loss 함수와 결합해서 쓰일 수 있다. 이 논문에서 쓰이는 distance/angle-wise loss가 teacher의 individual output을 transfer 하는 것이 아니기 때문에 individual output 값 자체가 중요한 곳(ex. softmax layer)에는 적합하지 않다. 
+
 ## Experiments
-
-## Results
-
-
+metric learning, classification, few-shot learning 이렇게 세가지 태스크에 RKD를 적용했다. distance-wise를 적용한 RKD-D, angle-wise를 적용한 RKD-A, 두 가지를 같이 적용한 RKD-DA를 사용해 실험했으며, 다른 KD 방법론들과 RKD를 비교하였다.
 
 ## Conclusion
+이 논문에서는 여러 태스크에 RKD를 적용함으로써 데이터들 간 mutual relation을 이용해 효율적으로 knowledge를 전이할 수 있음을 보였다. 특히 metric learning에서 RKD를 활용한 student 모델은 teacher 모델을 뛰어넘었다. 결과적으로, 단순하면서도 효과적인 distance와 angle wise loss를 이용함으로써 high-order knowledge를 전이할 수 있는 방법을 제시했다.
 
 ## Insights & Opinion
-
-
+기존의 연구들이 teacher 모델의 아웃풋 값을 그대로 매칭하며 knowledge를 전이하는 것에 중점을 두었다면, 이 연구는 아웃풋들 간의 관계에 집중했다는 점에서 차이가 있다. '어떤' 지식을 전달할 것인가에 대해 '구조적(관계) 지식'을 전달하자고 제안한 점에서도 의의가 있지만, 그 방법을 **거리**와 **각도** 두 가지로 간단하게 정의한 것이 인상 깊었다. Task specific 한 영역에서 RKD를 적용하려면 hyperparameter (balancing factor) 조절이 관건일 것 같다. Output 자체를 mapping 할 때, 동시에 relation 정보를 얼마나 많이 transfer 하면 가장 좋은 성능이 나올지 궁금하다. 
