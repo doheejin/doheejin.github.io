@@ -10,7 +10,7 @@ tags:	vscode envs server
 putty를 이용해 원격서버에 접속할 수도 있지만, vscode를 이용해 원격서버에 접속하면 파일에 바로 접근할 수 있어 코딩이 더 편리하다.(이외에도 다양한 IDE 사용, extension 사용, 쉬운 UI 등 장점이 많음)
 이 포스트에서는 vscode에서 <em>**원격서버에 접속하는 방법**</em>과, 매번 귀찮게 비밀번호를 치지 않아도 <em>**자동 접속이 되도록 설정**</em>하는 법에 대해 다루어보았다.
 
-## 원격서버에 접속하는 법
+## 원격서버에 접속
 
 우선 local에서 vscode 실행 후 확장(`ctrl`+`shift`+X)에서 `Remote Development`를 다운받는다.
 
