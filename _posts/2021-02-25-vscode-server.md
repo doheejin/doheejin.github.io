@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[vscode] vscode에서 원격서버 연동"
+title:  "[vscode] vscode에서 원격서버 연동 (비밀번호 없이 자동 접속 설정)"
 date:   2021-02-25T14:25:52-05:00
 author: Heejin Do
 categories: vscode
@@ -37,21 +37,26 @@ Add New SSH Host 를 누르고 자신이 접속하려고 하는 서버의 정보
 
 ### 1. 로컬에서 ssh-key 발급
 Windows PowerShell 실행 후 `ssh-keygen -t rsa -b 4096` 을 입력해 ssh-key를 발급받는다. 
-입력하라고 나오는 부분에서는 다 Enter를 쳐서 넘어가면 키가 발급된다. 이제 ` Get-Content .\.ssh\id_rsa.pub `를 입력해 키 파일의 내용을 확인하고 **복사**한다.
-
-<img src="/assets/images/server_4.PNG" title="ssh-key input">
-
-
-
+입력하라고 나오는 부분에서는 다 Enter를 쳐서 넘어가면 키가 발급된다. 이제 `Get-Content .\.ssh\id_rsa.pub`를 입력해 키 파일의 내용을 확인 후 **복사**한다.
 
 ### 2. 발급된 ssh-key파일을 서버에 등록
 
+다음으로, vscode 에서 **원격 서버**에 접속한다. `.ssh` 폴더 안의 **authorized_keys 파일**에 복사한 내용을 **붙여넣기** 한다.
 
+<img src="/assets/images/server_4.PNG" title="ssh-key input">
 
 ### 3. config 파일에서 키파일을 인식하도록 설정
+다시 로컬 환경(원격 서버가 아닌)에서 vscode를 실행시킨다. `F1`을 눌러 **Remote-SSH: Connect to Host...**를 클릭한다. 그 후 **Configure SSH Hosts...**를 실행하여 config 파일을 열거나, `.ssh` 폴더의 config 파일을 클릭한다.
 
+Config 파일에는 자신이 연결한 적이 있는 서버들에 대한 정보가 입력되어있는데, 자신이 key를 인식하고자 하는 서버 정보 아래에 **IdentityFile ~/.ssh/id_rsa**를 추가해주면 된다. 
+(필자는 이미 모든 서버에 key등록을 해 둔 상태라 위 사진에서 IdentityFile이 입력되어져 있는 것임)
 
+<img src="/assets/images/server_5.PNG" title="ssh-key input">
 
+이로써, vscode에서 비밀번호를 따로 입력하지 않아도 등록해둔 서버에 바로 접속 할 수 있게 되었다!
 
+로컬에 저장된 id_rsa 파일을 인식해 서버에 등록된 key 정보와 같으면 비밀번호 없이 해당 서버에 접속 할 수 있는 것이 그 원리이다.
+
+다들 vscode를 이용한 원격서버 접속으로 더 편하게 코딩할 수 있길 ∩_∩
 
 ----- 
