@@ -39,7 +39,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 우선 자신의 작업 디렉토리 ~ 아래에 .tmux.conf 파일을 만들고,
 
 {% highlight bash %}
-mkdir ~/.tmux.conf
+touch ~/.tmux.conf
 {% endhighlight %}
 
 아래 내용을 추가한다.
