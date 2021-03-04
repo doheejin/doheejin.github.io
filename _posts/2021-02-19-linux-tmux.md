@@ -35,7 +35,7 @@ tags:	linux envs tmux log
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 {% endhighlight %}
 
-#### 2. .tmux.conf 파일 만들기
+#### 2. `.tmux.conf` 파일 만들기
 우선 자신의 작업 디렉토리 ~ 아래에 .tmux.conf 파일을 만들고,
 
 {% highlight bash %}
@@ -61,7 +61,7 @@ set -g history-limit 50000  # enhance the limitation of saving the complete hist
 run '~/.tmux/plugins/tpm/tpm'
 {% endhighlight %}
 
-#### 3. tmux source .tmux.conf
+#### 3. tmux source `.tmux.conf`
 아래의 내용을 순서대로 입력한다.
 tmux → `ctrl`+B<em>(prefix)</em> → `shift`+i → tmux source .tmux.conf
 
