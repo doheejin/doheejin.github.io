@@ -46,26 +46,39 @@ sequence model의 발전을 위한 연구들도 많은데, 첫번째는 정확�
 ## Methods 
 > DeLIGHT : Deep and Light-Weight Transformers
 
-이 논문은 트랜스포머 아키텍쳐를 확장한, deep & light-weight 트랜스포머 DeLighT를 제안하고 이는,
-: (1) 더 넓은 representation을 배우기 위해 **deep & light-weight expand-reduce** 변형을 사용하고
-: (2) multi-head attention과 FFN 각각을 **single-head와 light-weight FFN**으로 대체할 수 있도록 하며
-: (3) attention의 차원을 depth/width와 구분되게 해 block-wise scaling으로 representation을 효율적으로 배울 수 있게 한다.
+이 논문은 트랜스포머 아키텍쳐를 확장한, deep & light-weight 트랜스포머 DeLighT를 제안하고
+: 이는 다음의 특성을 지닌다.
+: (1) 더 넓은 representation을 배우기 위해 **deep & light-weight expand-reduce** 변형 사용
+: (2) multi-head attention, FFN 각각을 **single-head, light-weight FFN**으로 대체할 수 있도록 함
+: (3) attention 차원이 depth/width와 구분돼 block-wise scaling으로 representation을 효율적으로 학습
 
 <img src="/assets/images/delight.PNG" title="delight">
 
 #### 1. Delight Transformation
+DelighT transformation은 d_m 차원의 인풋 벡터를 고차원 공간(d_max = w_m･d_m)으로 확장하고, 이를 다시 d_0차원의 아웃풋 벡터로 축소한다.
+이 확장-축소 과정은 N layer의 그룹 transformation을 통해 이뤄지고(Figure 1d), 이는 group linear transformation(GLT)이다.
+인풋의 특정 파트에서 아웃풋을 도출해 local representation을 학습하고, feature-shuffling을 통해 서로 다른그룹들 간 정보를 공유함으로써 global representation을 학습한다.
+
+일반적으로 트랜스포머의 표현력과 역량을 향상시키기 위해 인풋 차원인 d_m을 키우는 접근을 주로 하지만, 이는 operation 수를 늘린다. 따라서 이 연구에서는 표현력을 향상시키는 방법으로 확장-축소 방법을 사용해 intermediate transformations의 depth & width를 키웠다. 이로써 더 작은 차원의 어텐션 계산과, 더 적은 operation이 가능해졌다. 
+
+더 자세히 보면 F function은 인풋 X를 받고, 그것을 분할해 l번째 레이어의 g_l 그룹으로 보낸다. F함수는 X_i를 W_l_i와 b_l_i를 이용해 선형변환해 아웃풋 Y_l을 만든다. 
+
+<img src="/assets/images/delight_2.PNG" title="delight_2">
 
 #### 2. Delight Block
+<Figure 1b>를 보면 기존 트랜스포머와 다르게 single-head attention과 light-weight한 FFN을 사용했음을 알 수 있다.
+: 자세한 설명은 논문 참고.
 
 #### 3. Block-Wise Scaling
+더 깊고 넓은 네트워크를 만들기 위해, 이 논문에서는 단순히 모든 블록에 동일한 수의 파라미터를 할당하는 depth나 width wise scaling 대신, block level로 scaling을 했다.
 
-## Results
+<img src="/assets/images/delight_3.PNG" title="delight_3">
+
+## Experiments & Results
+Machine Translation과 Language Modeling 태스크에 적용했다. 결론적으로 두 태스크 모두에서 기존 베이스라인 모델보다 더 적은 파라미터로 비슷하거나 더 뛰어난 성능을 낼 수 있음을 증명해준다. 구체적 setting과 조건은 논문을 통해 확인 가능하다. 
 
 ## Conclusion
 이 논문에서는 block 내부와 block들 사이에서 파라미터들을 효율적으로 할당할 수 있게 하는, deep & light-weight 트랜스포머 DeLighT를 소개한다. 기존 모델과 비교했을 때 DeLighT는 (1) deep & light-weight 하고, (2) 비슷하거나 더 나은 성능을 보인다.
 
-
 ## Insights & Opinion
-NMT에 Knowledge Distillation을 적용한 논문을 찾다가 발견한 7개 논문 중 하나이다. 후속 논문들을 먼저 읽고 이 논문을 접해서 그런지 knowledge distillation의 적용 방법론 측면에서는 이미 당연하게 사용되어지는 것들을 나열해놓은 느낌이 들었다. 결국 기존에 쓰이던 knowledge distillation을 적용했는데, teacher 모델을 어떤 형태로 만들 것인가에 연구의 초점이 맞춰져 있는 것으로 보인다. Data filtering의 경우 filtering 이후의 과정만 보면 훈련 속도를 높일 수 있겠지만, forward translation을 한 번 거친 후의 filtering 결과를 다음 훈련에 사용한다는 점에서 전체 훈련 시간은 오히려 증가하는게 아닌가 하는 의문이 들었다. 여러 방향으로 실험한 결과 중에서 Embedding + Data Filtering의 결과가 가장 좋았다는 점이 주목할만한데 (<em>제목이 정해진 이유 아닐까</em>) filtering 정도를 `TER<=0.8`로 잡은 이유에 대한 언급이나 추가 reasoning이 없어서 아쉽다. result 2와 3을 비교한 부분에서는 역시 대부분의 연구에서 highest log probabilities를 기준으로 잡는 것에는 그럴만한 이유가 있구나 하는 생각이 들었지만, 다른 기준을 목표로 훈련시켜 보는 것도 하나의 trial 이 될 수 있다는 것을 배웠다.
-
-
+트랜스포머 모델을 변형하기 위한 기존의 여러 시도들이 **'어떤 조각을 어떻게 바꿔 끼워 구조를 바꿀지'**에 초점을 두었다면, 이 논문은 **기본 구조를 유지하되 각 구성요소들을 변형**시켰다는 점에서 차별점이 있다. 저자들이 풀고자 하는 문제는 <em>기존 트랜스포머 모델의 성능을 올리기 위해 단순히 depth나 width를 늘렸을 때 파라미터수 & 연산량이 증가하고 성능은 막상 크게 증가하지 않는 현상</em>이다. 이 문제를 해결하기 위해 **deep & light-weight transformer**인 DelighT를 제안한다. 어떤 방식으로 deep한지, 왜 light-weight인지를 살펴보면 그 구체적 방법론을 알 수 있다. 우선 **deep** 한 모델을 만들기 위해 확장-축소(expand-reduce) 변형을 사용했고(여기서 이용한 것이 GLT & block-wise scaling), 모델을 **light-weight** 하게 만들기 위해 multi-head를 single-head로, FFN을 light-weight FFN으로 대체했다. 결과를 보았을 때, 훨씬 적은 파라미터로 동일하거나 더 좋은 성능을 낼 수 있다는 것이 확연히 보였지만 훈련 시간이나 속도에 대한 언급은 없어 아쉬웠다. 따라서 DelighT 모델을 사용해 직접 실험을 해봐야겠다는 생각이 들었다. 이 DelighT 모델도 기존의 트랜스포머 모델처럼 다른 조각을 끼워맞추거나 빼거나 하는 식으로 추가 변형이 가능 할 것 같다는 점에서 확장성이 있을 듯 하다. 
