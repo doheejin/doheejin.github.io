@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "[PyTorch] 알아두면 유용한 함수 모음 - 비교(comparison) 함수"
-date:   2021-03-05T14:25:52-05:00
+date:   2021-02-13T14:25:52-05:00
 author: Heejin Do
 categories: "pytorch"
 tags:	pytorch function deep_learning 
