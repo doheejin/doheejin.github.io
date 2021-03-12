@@ -7,18 +7,19 @@ categories: "pytorch"
 tags:	pytorch function deep_learning 
 ---
 
-## 1. 같은지(torch.eq) 다른지(torch.ne) element-wise로 비교
+## 1. 비교(comparison)를 위한 함수
+element-wise로 비교하는 함수로는 torch.eq(같은지) torch.ne(다른지) torch.ge(크거나 같은지) torch.le(작거나 같은지)등이 있다.
 ### 1) torch.ne
-각 텐서의 요소(element)들을 비교해 다르면 True를, 같으면 False를 반환한다.
+각 텐서의 요소(element)들을 element-wise로 각각 비교해 다르면 True를, 같으면 False를 반환한다.
 
-- 형태 : torch.ne(`비교할 tensor`, `비교할 tensor나 value`, *, out=None) → Tensor
+- 형태 : torch.ne(`비교 대상 tensor`, `비교할 tensor나 value`, *, out=None) → Tensor
 
 ```
 EX) 
 >>> torch.ne(torch.tensor([[2, 5], [4, 3]]), torch.tensor([[2, 8], [2, 3]]))
-tensor([[False, True], [True, False]])
+결과 : tensor([[False, True], [True, False]])
 ```
-
+위처럼 shape가 동일한 텐서끼리는 같은 위치에 있는 값들을 비교하고, 비교할 tensor로 torch.Size([n, 1]) shape의 텐서가 주어지면 아래처럼 한 줄씩 값을 비교한다.
 {% highlight python %}
 # tensor 정의
 A = np.array([
@@ -53,10 +54,38 @@ print(not_include)
 
 {% endhighlight %}
 
-#### torch.eq
+### 2) torch.eq
+ne와 반대로 각 텐서의 요소(element)들을 비교해 같으면 True를, 다르면 False를 반환한다.
+- 형태 : torch.eq(`비교 대상 tensor`, `비교할 tensor나 value`, *, out=None) → Tensor
 
-#### torch.where
+```
+EX) 
+>>> torch.eq(torch.tensor([[2, 5], [4, 3]]), torch.tensor([[2, 8], [2, 3]]))
+tensor([[True, False], [False, True]])
+```
+ne처럼 같은 위치에 있는 값들을 비교하지만 True, False가 반대로 나타난다.
 
+### 3) torch.ge
+마찬가지로 element-wise로 값을 비교해 크거나 같으면 True를, 작으면 False를 반환한다.
+: (`torch.gt`는 크면 True, 작거나 같으면 False를 반환)
+```
+>>> torch.ge(torch.tensor([[2, 5], [4, 3]]), torch.tensor([[2, 8], [2, 3]]))
+tensor([[True, False], [True, True]])
+```
+
+### 3) torch.le
+마찬가지로 element-wise로 값을 비교해 작거나 같으면 True를, 크면 False를 반환한다.
+: (`torch.lt`는 작으면 True, 크거나 같으면 False를 반환)
+```
+>>> torch.ge(torch.tensor([[2, 5], [4, 3]]), torch.tensor([[2, 8], [2, 3]]))
+tensor([[True, True], [False], True]])
+```
+
+### 인덱싱, 슬라이싱 torch.where
+Return a tensor of elements selected from either x or y, depending on condition.
+### tensor 값 채우기
 #### torch.nonzero
 
+
 #### torch.ones & torch.ones_like
+
