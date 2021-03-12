@@ -85,7 +85,7 @@ ne처럼 같은 위치에 있는 값들을 비교하지만 True, False가 반대
 >>> torch.ge(torch.tensor([[2, 5], [4, 3]]), torch.tensor([[2, 8], [2, 3]]))
 # 결과 : tensor([[True, True], [False, True]])
 ```
-
+------
 ### [Tensor-Wise Comparison]
 element-wise의 비교가 아닌, 텐서 차원에서 비교가 이뤄진다.
 ### 1) torch.equal
