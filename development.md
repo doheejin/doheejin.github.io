@@ -7,7 +7,7 @@ main_nav: true
 
 {% for category in site.categories %}
   {% capture cat %}{{ category | first }}{% endcapture %}
-  {% if cat == "vscode" or cat == "github" or cat == "linux" %}
+  {% if cat == "vscode" or cat == "github" or cat == "linux" or cat=="pytorch" %}
   <h2 id="{{cat}}">{{ cat | capitalize }}</h2>
   {% for desc in site.descriptions %}
   {% if desc.cat == cat %}<p class="desc"><em>{{ desc.desc }}</em></p>{% endif %}

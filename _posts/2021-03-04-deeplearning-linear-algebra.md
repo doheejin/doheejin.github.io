@@ -7,4 +7,3 @@ categories: deep_learning
 tags:	deep learning linear algebra concepts
 ---
 
-rr
