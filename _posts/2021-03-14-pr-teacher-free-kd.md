@@ -86,6 +86,8 @@ BPE를 적용했고, [Vaswani et al]()의 설정을 따라 Transformer_base 모�
 0.5나 1의 표준편차에서는 첫번째로 나오는 두 개 단어(타겟 & 타겟과 가장 유사한 단어)에 주로 집중하고, 다른 범위의 단어를 할당할 확률은 거의 없었다. 1.5 표준편차의 경우, weight 분포가 타겟 & 가장 가까운 두 단어에 초점을 두었다. weight 분포는 상대적으로 부드러웠고, 번역 성능이 제일 좋았다. 표준편차가 2일 때는 evaluation function이 더 넓은 범위의 단어에 가중치를 둬 불확실성이 개입되었고 훈련 효과를 감소시켰다. 
 
 #### 3. Comparison with Sequence-level Knowledge Dsitillation
+
+
 #### 3. Combined with the back-translation
 back-translation에 이 모델을 적용하기 위해 parallel 코퍼스로 resverse translation system을 학습하고, 그 이후 pseudo-parallel data를 만들기 위해 타겟 언어의 단일 언어쌍 데이터셋으로 필터링 된 문장들을 번역했다.
 
@@ -95,5 +97,6 @@ back-translation에 이 모델을 적용하기 위해 parallel 코퍼스로 resv
 
 ## Conclusion
 이 연구에서는 low-resource senario에서는 sequence level KD로 번역의 질을 향상 시킬 수 없다는 것을 발견했다. 이에 저자는 Teacher-free KD 프레임 워크를 제안하며, 이 방법은 단어 간 유사성으로 teacher model의 output을 모델링한다. 실험을 통해 이 방법을 증명했으며, powerful한 teacher 모델을 찾는 것이 힘들다면 수동-디자인된 regularization term으로도 성능을 강화할 수 있는 것을 제안한다. 
+
 ## Insights & Opinion
-NMT 모델 test 과정에서 잘못된 예측은 forward로 propagate 되기 때문에 sequence distribution이 중요하다. 이 연구에서는 단순히 low-resource 언어를 위한 kd 기법을 소개하는데 그치지 않고, 그 과정에서 하이퍼파라미터 결정이나 표준편차의 영향같은 실험 결과를 보여주어서 sequence distribution에도 초점을 두었다는 것을 알 수 있었다. 
+Teacher 모델의 성능에 구애받지 않고 지식을 전이받을 수 있는 방법이라 높은 성능의 teacher 모델을 확보하기 어려운 low resource NMT에 적합한 KD 방법이라는 생각이 들었다. NMT 모델 test 과정에서 잘못된 예측은 forward로 propagate 되기 때문에 sequence distribution이 중요하다. 이 논문에서 단순히 low-resource 언어를 위한 kd 기법을 소개하는데 그치지 않고, 그 과정에서 하이퍼파라미터 결정이나 표준편차의 영향같은 실험 결과를 보여주며 sequence distribution에도 초점을 두었다는 것에 의의가 있다. 다만, 이 논문에서 teacher-free Knowledge Distillation이라고 표현했지만, 훈련 과정에서 targeting 할 대상을 바꿨을 뿐이며 teacher 모델이 없는데 과연 knowledge distillation이라고 할 수 있을지, 어디까지가 knowledge distillation인지에 대한 추가 논의가 필요해보인다. 
