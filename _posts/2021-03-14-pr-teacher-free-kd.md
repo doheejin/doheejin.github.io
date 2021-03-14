@@ -67,17 +67,33 @@ emb(y)는 단어 y의 벡터 표현을 의미하며, 단어간 유사성은 단�
 
 ## Experiments
 #### 1. Pre-Trained Embedding
-
+fastText로 pre-trained 임베딩을 만들었는데, 이 때 수천만의 monolingual 데이터를 포함하고 각 토큰의 벡터 표현을 효과적으로 학습할 수 있는 CCMT2020의 데이터를 이용한다. 더 자세한 설명은 논문을 참고.
 #### 2. Low-Resource NMT
 
+#### Dataset
+Uy→Ch, Mo→Ch 언어쌍에 대해 실험했고, CWMT데이터를 validation & test set으로 사용했다. 더 자세한 설명은 논문을 참고.
+
+#### Settings
+BPE를 적용했고, [Vaswani et al]()의 설정을 따라 Transformer_base 모델의 하이퍼파라미터를 설정했다. 6 layer Transformer를 사용하고 소스와 타겟 언어 모두에서 동일한 단어 벡터 표현을 사용했다. 더 자세한 설명은 논문을 참고.
+
 ## Results
-#### 1. Selection of Hyperparameter
-
+#### 1. Selection of Hyperparameter λ
+추가적인 loss term을 추가했기 때문에 하이퍼파라미터 λ를 설정하기 위한 실험을 했다. λ값이 0일 떄 KD가 훈련에 참여하고 있지 않음을 의미하고, 훈련 결과가 제일 나빴다. 람다값이 증가할수록 훈련 성능도 증가했고, 0.3에서 최대를 기록한 이후 다시 감소하는 추세를 보였다. 이는 불확실성이 더 개입될수록 모델의 성능이 데미지를 받는다는 것을 의미한다. 이 실험을 통해 (1) λ가 모델의 훈련 과정에 영향을 미친다는 것과, (2) 작은 λ값은 prior knowledge를 충분히 반영하지 못한다는 것과, (3) 큰 λ값은 비정확하거나 심지어 반대되는 단어(그러나 fastText 임베딩은 비슷한)까지 참고하게 해 모델을 더 불확실하게 만든다는 것을 알 수 있다.
 #### 2. Selelction of similarity Evaluation Function
+일반적으로 정규분포가 95.4% 정도 두 가지 표준편차의 범위에 있기 때문에, Priori probability도 주로 가장 유사한 두가지 단어에 집중하게 되며 첫번째 단어가 두번째 단어의 분포보다 훨씬 높다. 이는 모델을 제한하며, 서로 다른 정규 분포 밀도 함수가 번역 성능에 미치는 영향을 확인하기 위해, 5가지 다른 표준 편차(0.5,1,1.5,2)를 이용해 실험했다. 
 
+<img src="/assets/images/teacher-free-9.PNG" title="teacher-free">
+0.5나 1의 표준편차에서는 첫번째로 나오는 두 개 단어(타겟 & 타겟과 가장 유사한 단어)에 주로 집중하고, 다른 범위의 단어를 할당할 확률은 거의 없었다. 1.5 표준편차의 경우, weight 분포가 타겟 & 가장 가까운 두 단어에 초점을 두었다. weight 분포는 상대적으로 부드러웠고, 번역 성능이 제일 좋았다. 표준편차가 2일 때는 evaluation function이 더 넓은 범위의 단어에 가중치를 둬 불확실성이 개입되었고 훈련 효과를 감소시켰다. 
+
+#### 3. Comparison with Sequence-level Knowledge Dsitillation
 #### 3. Combined with the back-translation
+back-translation에 이 모델을 적용하기 위해 parallel 코퍼스로 resverse translation system을 학습하고, 그 이후 pseudo-parallel data를 만들기 위해 타겟 언어의 단일 언어쌍 데이터셋으로 필터링 된 문장들을 번역했다.
 
+실험 결과, back translation으로 low-resource 언어 번역 성능을 높일 수 있었지만, reverse translation을 따로 해야해서 훈련 코스트가 높아지고, reverse modle에 따라 & parallel data 크기에 따라 번역 성능 변동이 컸다.
+
+이 연구에서 제안하는 모델은, pre-trained 단어 벡터를 prior knowledge로 사용할 수 있기에 모델의 해석력을 높여주고, 훈련 코스트를 낮춰준다. 
 
 ## Conclusion
 이 연구에서는 low-resource senario에서는 sequence level KD로 번역의 질을 향상 시킬 수 없다는 것을 발견했다. 이에 저자는 Teacher-free KD 프레임 워크를 제안하며, 이 방법은 단어 간 유사성으로 teacher model의 output을 모델링한다. 실험을 통해 이 방법을 증명했으며, powerful한 teacher 모델을 찾는 것이 힘들다면 수동-디자인된 regularization term으로도 성능을 강화할 수 있는 것을 제안한다. 
 ## Insights & Opinion
+NMT 모델 test 과정에서 잘못된 예측은 forward로 propagate 되기 때문에 sequence distribution이 중요하다. 이 연구에서는 단순히 low-resource 언어를 위한 kd 기법을 소개하는데 그치지 않고, 그 과정에서 하이퍼파라미터 결정이나 표준편차의 영향같은 실험 결과를 보여주어서 sequence distribution에도 초점을 두었다는 것을 알 수 있었다. 
