@@ -52,7 +52,18 @@ dark knowledge를 얻기 위해, 저자는 단어들 간 유사성에 따라 수
 <img src="/assets/images/teacher-free-4.PNG" title="teacher-free">
 
 emb(y)는 단어 y의 벡터 표현을 의미하며, 단어간 유사성은 단어 벡터 간 코사인 유사도로 표현된다. **단어집합의 target word와 유사한 단어는 evaluation function을 통해 별도의 weight를 할당**받는다. Prior probability가 training distribution에 따르도록 softmax를 사용했고, temperature control 기법을 써 전반적인 lable quality를 높였다. 아래q(y∗)는 각 단어의 prior distribution을 정의하는 수식이다.
+
 <img src="/assets/images/teacher-free-5.PNG" title="teacher-free">
+
+- f(y, y∗) : similarity weight from the normal distribution
+- T : temperature parameter(T→0 : distribution은 one-hot target vector; T→ +∞ : uniform distribution)
+
+모델 예측과 prior probability 간의 차이는 KL divergence로 측정되며, 아래 수식처럼 모델 훈련을 가이드 하는데 사용된다. 
+<img src="/assets/images/teacher-free-6.PNG" title="teacher-free">
+<img src="/assets/images/teacher-free-7.PNG" title="teacher-free">
+
+이 수식을 MLE에 맞게 추가해 최종 loss function을 아래처럼 설정했다. 
+<img src="/assets/images/teacher-free-8.PNG" title="teacher-free">
 
 ## Experiments
 #### 1. Pre-Trained Embedding
