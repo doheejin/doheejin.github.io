@@ -16,7 +16,7 @@ tags:	nmt row-resource teacher-free knowledge dsitillation kd
 일반적으로 Knowledge Distillation(KD)는 크고 복잡한 teacher 모델에서 경량화된 student 모델로 지식을 distill 하는 것을 목표로 한다. Teacher 모델의 정보 퀄리티나 성능이 student 모델에 영향을 미쳤고, 이로 인해 주로 강력한 모델이 teacher 모델로 사용되었다. 그러나, low-resource 언어쌍 번역에서는 강한 teacher 모델을 만드는 것이 불가능하다. 따라서, **이 논문에서는 low-resource NMT를 위해, 수동적으로 디자인된 regularization distribution을 가상의 teacher 모델로 두고, 이로부터 학습하는 Teacher-Free Knowledge Distillation을 제안**한다. 이 distribution은 단어간 유사성 정보를 담고 있을 뿐 아니라, 모델 훈련을 위한 효과적인 regularity를 제공한다.
 
 ## Introduction
-Knowledge Distillation에서 보통 teacher 모델은 높은 성능과 강력한 학습력을 지니며, soft target을 제공함으로써 student 모델을 학습시킨다. Student와 teacher의 output 간 cross-entropy loss를 최소화함으로써 student가 teacher 모델을 모방하도록 한다. 이 과정에서 teacher의 soft target이 다른 카테고리 간 유사성 정보를 담고 있는 "dark knowledge"를 전이할 수 있다고 믿어진다. 대게 teacher는 high-capacity 모델로, student는 compact한 모델로 정해지고 knowledge를 전이함으로써 성능 저하 없이 student의 compactness로 인해 benefit 받기를 기대한다. **이 연구에서는 모델을 compress 하는 대신, student가 teacher와 동일하게 parameterized 되도록 새로운 관점으로 접근한다.**
+보통 Knowledge Distillation에서 teacher 모델은 높은 성능과 강력한 학습력을 지니며, soft target을 제공함으로써 student 모델을 학습시킨다. Student와 teacher의 output 간 cross-entropy loss를 최소화함으로써 student가 teacher 모델을 모방하도록 한다. 이 과정에서 teacher의 soft target이 다른 카테고리 간 유사성 정보를 담고 있는 "dark knowledge"를 전이할 수 있다고 믿어진다. 대게 teacher는 high-capacity 모델로, student는 compact한 모델로 정해지고 knowledge를 전이함으로써 성능 저하 없이 student의 compactness로 인해 benefit 받기를 기대한다. **이 연구에서는 모델을 compress 하는 대신, student가 teacher와 동일하게 parameterized 되도록 새로운 관점으로 접근한다.**
 
 현재, 대부분의 NMT 시스템은 Encoder-Decoder 시스템 하에서 bilingual parallel corpus를 사용한다. 하지만, 여전히 data가 충분하지 않고 더 적게 발생하는 사건들(자주 사용하지 않는 언어들)에 대해서는 학습이 잘 되지 않는다.
 
@@ -86,9 +86,10 @@ BPE를 적용했고, [Vaswani et al]()의 설정을 따라 Transformer_base 모�
 0.5나 1의 표준편차에서는 첫번째로 나오는 두 개 단어(타겟 & 타겟과 가장 유사한 단어)에 주로 집중하고, 다른 범위의 단어를 할당할 확률은 거의 없었다. 1.5 표준편차의 경우, weight 분포가 타겟 & 가장 가까운 두 단어에 초점을 두었다. weight 분포는 상대적으로 부드러웠고, 번역 성능이 제일 좋았다. 표준편차가 2일 때는 evaluation function이 더 넓은 범위의 단어에 가중치를 둬 불확실성이 개입되었고 훈련 효과를 감소시켰다. 
 
 #### 3. Comparison with Sequence-level Knowledge Dsitillation
+동일한 데이터로 sequence-level knowledge distillation을 이용해 실험해 본 결과, low-resource 언어의 경우 sequence-level KD는 오히려 성능의 저하를 야기했다.
+이는 전통적인 KD 기법이 teacher model의 퀄리티와 밀접한 관련이 있다는걸 의미하기도 한다. Teacher-free KD의 성능이 transformer_base와 sequence-levle KD를 뛰어넘었는데, 이는 prior knowledge가 데이터가 부족한 학습에서 큰 도움을 줄 수 있기 때문으로 보인다.
 
-
-#### 3. Combined with the back-translation
+#### 4. Combined with the back-translation
 back-translation에 이 모델을 적용하기 위해 parallel 코퍼스로 resverse translation system을 학습하고, 그 이후 pseudo-parallel data를 만들기 위해 타겟 언어의 단일 언어쌍 데이터셋으로 필터링 된 문장들을 번역했다.
 
 실험 결과, back translation으로 low-resource 언어 번역 성능을 높일 수 있었지만, reverse translation을 따로 해야해서 훈련 코스트가 높아지고, reverse modle에 따라 & parallel data 크기에 따라 번역 성능 변동이 컸다.
