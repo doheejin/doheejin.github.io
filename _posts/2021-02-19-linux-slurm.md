@@ -17,7 +17,7 @@ bash 스크립트에서 slurm 명령은 `sbatch`를 통해 이루어진다.
 ### 1. sbatch
 #sbatch 뒤에 옵션을 달면, slurm 명령어가 실행된다.
 
-{% highlight bash %}
+{% highlight md %}
 #!/bin/bash
 
 #SBATCH -J ensemble   # job name
@@ -34,27 +34,26 @@ bash 스크립트에서 slurm 명령은 `sbatch`를 통해 이루어진다.
 - `-t` : 작업 시간 설정
 
 ### 2. GPU 사용 설정
-
-{% highlight bash %}
-## 1. gpu 개수 설정
-
+#### 1) gpu 개수 설정
+{% highlight md %}
 ## gpu 1장
 #SBATCH   --gres=gpu:1
 
 ## gpu 2장
 #SBATCH   --gres=gpu:2
+{% endhighlight %}
 
-
-## 2. 노드 지정
-
+#### 2) 사용할 노드 지정
+{% highlight md %}
 ## 노드를 지정할 경우
 #SBATCH  --nodelist=n10
 
 ## 노드를 지정하지 않을 경우
 #SBATCH   --nodes=1
+{% endhighlight %}
 
-## 3. task, node 설정
-
+#### 3) task, node 설정
+{% highlight md %}
 ## gpu 가 2장이면
 #SBTACH   --ntasks=2
 #SBATCH   --tasks-per-node=2
@@ -64,12 +63,11 @@ bash 스크립트에서 slurm 명령은 `sbatch`를 통해 이루어진다.
 #SBTACH   --ntasks=4
 #SBATCH   --tasks-per-node=4
 #SBATCH   --cpus-per-task=1
-
 {% endhighlight %}
 
 ### 3. 관리자 옵션
 
-{% highlight bash %}
+{% highlight md %}
 #SBATCH --ntasks=1        # Run on a single CPU
 #SBATCH --mem=2gb         # Limit of Memory
 #SBATCH --time=00:30:00   # Limit of Time
