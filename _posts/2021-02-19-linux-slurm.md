@@ -33,8 +33,41 @@ bash 스크립트에서 slurm 명령은 `sbatch`를 통해 이루어진다.
 - `-p` : 파티션 이름
 - `-t` : 작업 시간 설정
 
+### 2. GPU 사용 설정
 
-### 2. 관리자 옵션
+{% highlight bash %}
+## 1. gpu 개수 설정
+
+## gpu 1장
+#SBATCH   --gres=gpu:1
+
+## gpu 2장
+#SBATCH   --gres=gpu:2
+
+
+## 2. 노드 지정
+
+## 노드를 지정할 경우
+#SBATCH  --nodelist=n10
+
+## 노드를 지정하지 않을 경우
+#SBATCH   --nodes=1
+
+## 3. task, node 설정
+
+## gpu 가 2장이면
+#SBTACH   --ntasks=2
+#SBATCH   --tasks-per-node=2
+#SBATCH   --cpus-per-task=1
+
+## gpu 가 4장이면 
+#SBTACH   --ntasks=4
+#SBATCH   --tasks-per-node=4
+#SBATCH   --cpus-per-task=1
+
+{% endhighlight %}
+
+### 3. 관리자 옵션
 
 {% highlight bash %}
 #SBATCH --ntasks=1        # Run on a single CPU
@@ -42,7 +75,7 @@ bash 스크립트에서 slurm 명령은 `sbatch`를 통해 이루어진다.
 #SBATCH --time=00:30:00   # Limit of Time
 {% endhighlight %}
 
-- 관리자가 이런 옵션이 포함되도록 설정할 수도 있음
+- 관리자가 이런 옵션이 포함되도록 설정 한 경우, 작업 스크립트에도 명시해줘야 함
 
 ------
 
